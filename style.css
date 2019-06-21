@@ -86,27 +86,29 @@ html {
 #ipAddressContainer {
   font-family: 'BenderBold';
   color: white;
-  opacity: 0;
+  width: 100%;
   display: flex;
   flex-flow: column wrap;
   align-items: center;
   animation-name: flicker;
   animation-delay: 500ms;
   animation-duration: 350ms;
+  animation-iteration-count = "infinite";
   animation-fill-mode: forwards;
 }
 
-.copyButton {
+#copyButton {
+  opacity: 0;
   margin-top: 2rem;
   font-family: 'BenderBold';
   font-size: 1.8rem;
   background-color: transparent;
   border: 2px solid white;
   color: white;
-  width: 40%;
   padding-top: 0.24rem;
   padding-bottom: 0.24rem;
-  
+  padding-left: 2rem;
+  padding-right: 2rem;
   cursor: pointer;
 }
 
@@ -135,10 +137,11 @@ html {
   color: #EEE;
   font-size: 1.8rem;
   opacity: 0;
-  animation-name: flicker;
+  text-transform: uppercase;
+/*   animation-name: flicker;
   animation-delay: 3700ms;
   animation-duration: 350ms;
-  animation-fill-mode: forwards;
+  animation-fill-mode: forwards; */
 }
 
 #AboutUs {
@@ -147,7 +150,7 @@ html {
   font-size: 1.2rem;
   opacity: 0;
   animation-name: flicker;
-  animation-delay: 4100ms;
+  animation-delay: 5000ms;
   animation-duration: 350ms;
   animation-fill-mode: forwards;
 }
@@ -155,7 +158,7 @@ html {
 @media only screen and (max-width: 500px) {
   /* For mobile */
   
-  .caption {
+  #caption {
   font-size: 1.45rem;
   }
   
@@ -175,10 +178,10 @@ html {
     font-size: 0.75rem;
   }
   
-  .copyButton {
+  #copyButton {
     margin-top: 1.5rem;
-    font-size: 2rem;
-    width: 50%;
+    font-size: 1.7rem;
+    
     padding-top: 0.3rem;
     padding-bottom: 0.3rem;
   }
@@ -191,7 +194,7 @@ html {
 
 @media only screen and (min-width: 500px) and (max-width: 1000px) {
   /* For tablets */
-  .caption {
+  #caption {
   font-size: 1.5rem;
   }
   
@@ -204,7 +207,7 @@ html {
     margin-bottom: 3.5rem;
   }
   
-  .copyButton {
+  #copyButton {
     font-size: 1.8rem;
   }
   
@@ -216,7 +219,7 @@ html {
 
 @media only screen and (min-width: 1000px) {
   /* For desktop: */
-  .caption {
+  #caption {
   font-size: 1.8rem;
   }
   
@@ -228,7 +231,7 @@ html {
     margin-bottom: 3.5rem;
   }
   
-  .copyButton {
+  #copyButton {
     font-size: 2rem;
     margin-top: 1.5rem;
   }
