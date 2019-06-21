@@ -6,8 +6,10 @@
   /* globals snazzyMapStyle */
   
   // Move these to .env files before production
+  
   const ipAddressApiUrl = '';
   const GoogleMapsApiKey = '';
+
   
   // Animation controls (in milliseconds)
   const initialMapRevealDelay = 2000;
@@ -42,16 +44,27 @@
 
   /** GENERIC HELPER FUNCTIONS - ENDS */
 
+  // Flicker Animation for given DOM element
+  const flicker = (domElement, duration, delay) => {
+    duration = duration ? duration: 250;
+    delay = delay ? delay: 0;
+    domElement.style.animation = "flicker";
+    domElement.style.animationDuration = duration+"ms";
+    domElement.style.animationDelay = delay+"ms";
+    domElement.style.animationIterationCount = "1";
+    domElement.style.animationFillMode = "forwards";
+  }
 
-
+  // setFullScreenHeight for the web app. NO more scrolling.
   const setFullScreenHeight = () => {
       const { clientHeight } = window.document.documentElement;
       eleID("fullScreenContainer").style.height = `${clientHeight}px`;
       // console.log(`Client Hieght: ${clientHeight}`);
   }
   
-   const initializeMap = (mapDomElementID, Latitude, Longitude) => {
-   // For more options see: https://developers.google.com/maps/documentation/javascript/reference#MapOptions
+  // Render Google map on given DOM element
+  const initializeMap = (mapDomElementID, Latitude, Longitude, city, country) => {
+  // For more options see: https://developers.google.com/maps/documentation/javascript/reference#MapOptions
     const mapOptions = {
       zoom: 14,
       center: new google.maps.LatLng(Latitude, Longitude),
@@ -64,20 +77,58 @@
       clickableIcons: false,
     };
     const map = new google.maps.Map(eleID(mapDomElementID), mapOptions);
-    google.maps.event.addListenerOnce(map, 'idle', function(){
+    google.maps.event.addListenerOnce(map, 'tilesloaded', function(){
       //console.log('Map loaded, now reveal map');
-      revealMap();
+      revealMap(city, country);
     });
   }
-
-
-  const showIP = (ApiResponse) => {
-    // console.log(ipAddress);
-    const ipAddress = JSON.parse(ApiResponse).ip;
+  
+  const displayIP = (ipAddress) => {
+    eleID("caption").innerHTML = "YOUR IP ADDRESS";
     eleID("ipAddress").innerHTML = ipAddress;
     
-    // Render Google map's location based on the API response 
-    initializeMap("map", 35.6762, 139.6503);
+    flicker(eleID("caption"));
+    flicker(eleID("ipAddress"));
+    flicker(eleID("copyButton"));
+  }
+  
+  const displayLocation = (city, country) => {
+    if(city && country && city.length + country.length <20)
+    {
+      eleID("locationContainer").innerHTML = city+ " // "+ country;
+      flicker(eleID("locationContainer"));
+    }
+  }
+
+  // Display IP address and map location
+  const renderAPIresult = (ApiResponse) => {
+    ApiResponse = JSON.parse(ApiResponse);
+    console.log(ApiResponse);
+    
+    if(1) // API response is 200
+    {
+      const {
+        geobytesipaddress,
+        geobytescountry,
+        geobytescity,
+        geobyteslatitude,
+        geobyteslongitude
+      } = ApiResponse;
+      // show IP
+      displayIP(geobytesipaddress);
+      // Render Google map's location based on the API response 
+      initializeMap(
+        "map",
+        parseFloat(geobyteslatitude),
+        parseFloat(geobyteslongitude),
+        geobytescity,
+        geobytescountry
+      );
+    }
+    else{
+      eleID("caption").innerHTML = "ERROR"
+    }
+    
   }
   
   const drawGrid = (gridContainerDomID) => {
@@ -99,7 +150,7 @@
     }
   }
   
-  const revealMap = () => {
+  const revealMap = (city, country) => {
     let delay = 0.5;
     for(let i=0;i<150;i++)
     {
@@ -109,19 +160,17 @@
       gridCell[i].style.animationDelay = (initialMapRevealDelay + random(0,dominoAnimationRandomness) + (domionesFallRate * delay)) + "ms";
       delay += gridDominoesAnimDelay;
     }
+    // showLocation
+      displayLocation(city, country);
   }
 
   
   // INITIAL TRIGGER ON LOAD
-  
   const triggerOnLoad = () => {
-    
     // 1. Set Full screen height for the parent container - No scrolling allowed
     setFullScreenHeight();
-    
     // 2. Get IP address and location from API
-    httpGetAsync(ipAddressApiUrl,showIP);
-    
+    httpGetAsync(ipAddressApiUrl, renderAPIresult);
     // 3. Draw grid
     drawGrid("gridOverlayContainer");
     
