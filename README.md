@@ -1,2 +1,8 @@
-# IPscanner
-Web app to find IP address and location
+#IP scanner - staging env
+=========================
+
+Website link: https://eyep.glitch.me
+
+
+
+
