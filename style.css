@@ -1,0 +1,262 @@
+/* Default style - STARTS */
+
+html {
+  background-color: #222222;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+*, *:before, *:after {
+  margin:0;
+  box-sizing: inherit;
+}
+
+*:focus {
+  outline: 0;
+}
+
+@font-face {
+  font-family: 'BenderBold';
+  src: url('https://cdn.glitch.com/cb9c4712-cbdd-45df-acee-ef88436f4bd4%2FJovanny%20Lemonad%20-%20Bender-Bold.otf?v=1560764509460'); /* IE9 Compat Modes */
+}
+@font-face {
+  font-family: 'Bender';
+  src: url('https://cdn.glitch.com/cb9c4712-cbdd-45df-acee-ef88436f4bd4%2FJovanny%20Lemonad%20-%20Bender.otf?v=1560764511597'); /* IE9 Compat Modes */
+}
+@font-face {
+  font-family: 'BenderLight';
+  src: url('https://cdn.glitch.com/cb9c4712-cbdd-45df-acee-ef88436f4bd4%2FJovanny%20Lemonad%20-%20Bender-Light.otf?v=1560764510757'); /* IE9 Compat Modes */
+}
+/* Default style - ENDS */
+
+
+#fullScreenContainer {
+  position: relative;
+  background-color: #222222;
+  overflow: hidden;
+}
+
+#map {
+  background: grey;
+  position: absolute !important;
+  width: 100%;
+  height: 110%;
+  top: 0;
+  right: 0;
+  z-index:0;
+}
+
+#gridOverlayContainer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index:1;
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+}
+
+.gridCell {
+  background-color: #222222;
+/*   border: 1px solid #333333; */
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #666;
+}
+
+.plusSymbol {
+  opacity:0;
+}
+
+#ipAddressOverlayContainer {
+  position: absolute;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.1);
+  z-index:2;
+}
+
+#ipAddressContainer {
+  font-family: 'BenderBold';
+  color: white;
+  opacity: 0;
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+  animation-name: flicker;
+  animation-delay: 500ms;
+  animation-duration: 350ms;
+  animation-fill-mode: forwards;
+}
+
+.copyButton {
+  margin-top: 2rem;
+  font-family: 'BenderBold';
+  font-size: 1.8rem;
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+  width: 40%;
+  padding-top: 0.24rem;
+  padding-bottom: 0.24rem;
+  
+  cursor: pointer;
+}
+
+#footerOverlayContainer {
+  position: absolute;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: flex-end;
+  width: 100%;
+  height: 95%;
+  background-color: rgba(0,0,0,0);
+  z-index: 2;
+  pointer-events: none;
+}
+
+#footerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 90%;
+}
+
+#locationContainer {
+  font-family: 'BenderBold';
+  color: #EEE;
+  font-size: 1.8rem;
+  opacity: 0;
+  animation-name: flicker;
+  animation-delay: 3700ms;
+  animation-duration: 350ms;
+  animation-fill-mode: forwards;
+}
+
+#AboutUs {
+  font-family: 'BenderBold';
+  color: #999;
+  font-size: 1.2rem;
+  opacity: 0;
+  animation-name: flicker;
+  animation-delay: 4100ms;
+  animation-duration: 350ms;
+  animation-fill-mode: forwards;
+}
+
+@media only screen and (max-width: 500px) {
+  /* For mobile */
+  
+  .caption {
+  font-size: 1.45rem;
+  }
+  
+  #ipAddress {
+    font-size: 3rem;
+  }
+  
+  #ipAddressContainer {
+    margin-bottom: 1.25rem;
+  }
+  
+  #locationContainer {
+    font-size: 1rem;
+  }
+  
+  #AboutUs {
+    font-size: 0.75rem;
+  }
+  
+  .copyButton {
+    margin-top: 1.5rem;
+    font-size: 2rem;
+    width: 50%;
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+  }
+  
+  .gridCell {
+    padding: 2rem;
+  }
+}
+
+
+@media only screen and (min-width: 500px) and (max-width: 1000px) {
+  /* For tablets */
+  .caption {
+  font-size: 1.5rem;
+  }
+  
+  
+  #ipAddress {
+    font-size: 3.5rem;
+  }
+  
+  #ipAddressContainer {
+    margin-bottom: 3.5rem;
+  }
+  
+  .copyButton {
+    font-size: 1.8rem;
+  }
+  
+  .gridCell {
+    padding: 3rem;
+  }
+  
+}
+
+@media only screen and (min-width: 1000px) {
+  /* For desktop: */
+  .caption {
+  font-size: 1.8rem;
+  }
+  
+  #ipAddress {
+    font-size: 4.5rem;
+  }
+  
+  #ipAddressContainer {
+    margin-bottom: 3.5rem;
+  }
+  
+  .copyButton {
+    font-size: 2rem;
+    margin-top: 1.5rem;
+  }
+  
+  .gridCell {
+    padding: 5rem;
+  }
+  
+}
+
+@keyframes black2Transparent {
+  0% {background-color: #222;}
+  50% {background-color: #777;}
+  100% {background-color: transparent;}
+}
+
+@keyframes flicker {
+  0% {opacity: 1;}
+/*   10% {opacity: 0;}
+  20% {opacity: 1;} */
+  30% {opacity: 0;}
+/*   40% {opacity: 1;}
+  50% {opacity: 0;} */
+  60% {opacity: 1;}
+/*   70% {opacity: 0;}
+  80% {opacity: 1;} */
+  90% {opacity: 0;}
+  100% {opacity: 1;}
+}
+
+
