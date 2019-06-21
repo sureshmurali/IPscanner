@@ -129,7 +129,7 @@ html {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  width: 90%;
+  width: 95%;
 }
 
 #locationContainer {
@@ -149,10 +149,10 @@ html {
   color: #999;
   font-size: 1.2rem;
   opacity: 0;
-  animation-name: flicker;
-  animation-delay: 5000ms;
-  animation-duration: 350ms;
-  animation-fill-mode: forwards;
+}
+
+.captionError {
+  font-size: 3rem !important;
 }
 
 @media only screen and (max-width: 500px) {
@@ -175,7 +175,7 @@ html {
   }
   
   #AboutUs {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
   }
   
   #copyButton {

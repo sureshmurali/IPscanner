@@ -6,10 +6,8 @@
   /* globals snazzyMapStyle */
   
   // Move these to .env files before production
-  
-  const ipAddressApiUrl = '';
-  const GoogleMapsApiKey = '';
-
+  const ipAddressApiUrl = 'https://bmh54xvwva.execute-api.us-east-1.amazonaws.com/dev/getIpInfo';
+  const GoogleMapsApiKey = 'AIzaSyDU8bDnzS0dg75w8H6Y6j_y7ssaoEJDvLA';
   
   // Animation controls (in milliseconds)
   const initialMapRevealDelay = 2000;
@@ -20,6 +18,8 @@
   const plusAnimationRandomness = 500;
   const plusFlickerAnimationDuration = 400;
   const initialPlusRevealDelay = 1000;
+  
+  const mapRevealAnimationWaitingTime = 3000;
   
   const gridCell = [];
 
@@ -33,10 +33,17 @@
   function eleID (id) { return document.getElementById(id) }
   
   const httpGetAsync = (theUrl, callback) => {
+    console.log(theUrl);
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() { 
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-            callback(xmlHttp.responseText);
+        console.log(xmlHttp);
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+          if(xmlHttp.response)
+            callback({response: JSON.parse(xmlHttp.responseText), status: 'success'});
+          else
+            callback({status: 'error'});
+        }
+            
     }
     xmlHttp.open("GET", theUrl, true); // true for asynchronous 
     xmlHttp.send(null);
@@ -83,37 +90,43 @@
     });
   }
   
+  const displayAboutUs = () => {
+    flicker(eleID("AboutUs"), 350, mapRevealAnimationWaitingTime + 800);
+  }
+  
   const displayIP = (ipAddress) => {
     eleID("caption").innerHTML = "YOUR IP ADDRESS";
     eleID("ipAddress").innerHTML = ipAddress;
     
     flicker(eleID("caption"));
     flicker(eleID("ipAddress"));
-    flicker(eleID("copyButton"));
+    setTimeout(()=>{flicker(eleID("copyButton"))}, 1000);
   }
   
   const displayLocation = (city, country) => {
     if(city && country && city.length + country.length <20)
     {
       eleID("locationContainer").innerHTML = city+ " // "+ country;
-      flicker(eleID("locationContainer"));
+      flicker(eleID("locationContainer"),350, mapRevealAnimationWaitingTime);
     }
+    displayAboutUs();
   }
 
   // Display IP address and map location
   const renderAPIresult = (ApiResponse) => {
-    ApiResponse = JSON.parse(ApiResponse);
+    console.log("API response:");
     console.log(ApiResponse);
-    
-    if(1) // API response is 200
+    if(ApiResponse.response && ApiResponse.status === 'success') // API response is 200
     {
+      const response = ApiResponse.response;
+      console.log(response);
       const {
         geobytesipaddress,
         geobytescountry,
         geobytescity,
         geobyteslatitude,
         geobyteslongitude
-      } = ApiResponse;
+      } = response;
       // show IP
       displayIP(geobytesipaddress);
       // Render Google map's location based on the API response 
@@ -126,7 +139,9 @@
       );
     }
     else{
-      eleID("caption").innerHTML = "ERROR"
+      eleID("caption").className = "captionError";
+      eleID("caption").innerHTML = "ERROR";
+      eleID("ipAddressOverlayContainer").style.backgroundColor= "rgba(46, 0, 0, 0.49)";
     }
     
   }
@@ -161,7 +176,8 @@
       delay += gridDominoesAnimDelay;
     }
     // showLocation
-      displayLocation(city, country);
+    displayLocation(city, country);
+      
   }
 
   
