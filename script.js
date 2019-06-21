@@ -6,8 +6,8 @@
   /* globals snazzyMapStyle */
   
   // Move these to .env files before production
-  const ipAddressApiUrl = 'https://api.ipdata.co/?api-key=test';
-  const GoogleMapsApiKey = 'AIzaSyDU8bDnzS0dg75w8H6Y6j_y7ssaoEJDvLA';
+  const ipAddressApiUrl = '';
+  const GoogleMapsApiKey = '';
   
   // Animation controls (in milliseconds)
   const initialMapRevealDelay = 2000;
