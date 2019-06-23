@@ -15,6 +15,14 @@ html {
   outline: 0;
 }
 
+input,
+textarea,
+button,
+select,
+a {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
 @font-face {
   font-family: 'BenderBold';
   src: url('https://cdn.glitch.com/cb9c4712-cbdd-45df-acee-ef88436f4bd4%2FJovanny%20Lemonad%20-%20Bender-Bold.otf?v=1560764509460'); /* IE9 Compat Modes */
@@ -53,6 +61,7 @@ html {
   z-index:1;
   display: grid;
   grid-template-columns: repeat(20, 1fr);
+  pointer-events: none;
 }
 
 .gridCell {
@@ -85,26 +94,32 @@ html {
 
 #ipAddressContainer {
   font-family: 'BenderBold';
-  color: white;
+  color: #FFF;
   width: 100%;
   display: flex;
   flex-flow: column wrap;
   align-items: center;
   animation-name: flicker;
-  animation-delay: 500ms;
-  animation-duration: 350ms;
-  animation-iteration-count = "infinite";
+  animation-duration: 100ms;
+  animation-iteration-count: infinite;
   animation-fill-mode: forwards;
 }
 
+#ipAddress::selection {
+  background: #FFF;
+  color: #222;
+}
+
 #copyButton {
+  user-select: none;
   opacity: 0;
-  margin-top: 2rem;
+  outline: none;
+  margin-top: 1.5rem;
   font-family: 'BenderBold';
   font-size: 1.8rem;
   background-color: transparent;
-  border: 2px solid white;
-  color: white;
+  border: 2px solid #FFF;
+  color: #FFF;
   padding-top: 0.24rem;
   padding-bottom: 0.24rem;
   padding-left: 2rem;
@@ -112,17 +127,22 @@ html {
   cursor: pointer;
 }
 
+#copyButton:hover {
+  background-color: #FFF;
+  color: #333;
+}
+
 #footerOverlayContainer {
   position: absolute;
+  bottom: 0;
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
   width: 100%;
-  height: 95%;
+  height: 15%;
   background-color: rgba(0,0,0,0);
   z-index: 2;
-  pointer-events: none;
 }
 
 #footerContainer {
@@ -138,10 +158,12 @@ html {
   font-size: 1.8rem;
   opacity: 0;
   text-transform: uppercase;
-/*   animation-name: flicker;
-  animation-delay: 3700ms;
-  animation-duration: 350ms;
-  animation-fill-mode: forwards; */
+  flex-basis: 60%;
+}
+
+#locationContainer::selection {
+  background: #FFF;
+  color: #222;
 }
 
 #AboutUs {
@@ -149,17 +171,42 @@ html {
   color: #999;
   font-size: 1.2rem;
   opacity: 0;
-  animation-name: flicker;
-  animation-delay: 5000ms;
-  animation-duration: 350ms;
-  animation-fill-mode: forwards;
+  text-align: right;
+}
+
+#AboutUs::selection {
+  background: #FFF;
+  color: #222;
+}
+
+#ipAddress::selection {
+  background: #FFF;
+  color: #222;
+}
+
+.captionError {
+  font-size: 3rem !important;
+}
+
+#caption {
+  user-select: none;
+}
+
+.contactLink {
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
 }
 
 @media only screen and (max-width: 500px) {
   /* For mobile */
   
+  #footerContainer {
+    width: 90%;
+  }
+  
   #caption {
-  font-size: 1.45rem;
+  font-size: 1.7rem;
   }
   
   #ipAddress {
@@ -175,11 +222,11 @@ html {
   }
   
   #AboutUs {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
   }
   
   #copyButton {
-    margin-top: 1.5rem;
+    margin-top: 1.2rem;
     font-size: 1.7rem;
     
     padding-top: 0.3rem;
@@ -195,7 +242,7 @@ html {
 @media only screen and (min-width: 500px) and (max-width: 1000px) {
   /* For tablets */
   #caption {
-  font-size: 1.5rem;
+  font-size: 2rem;
   }
   
   
@@ -212,7 +259,7 @@ html {
   }
   
   .gridCell {
-    padding: 3rem;
+    padding: 2.8rem;
   }
   
 }
@@ -220,11 +267,11 @@ html {
 @media only screen and (min-width: 1000px) {
   /* For desktop: */
   #caption {
-  font-size: 1.8rem;
+  font-size: 2.5rem;
   }
   
   #ipAddress {
-    font-size: 4.5rem;
+    font-size: 5rem;
   }
   
   #ipAddressContainer {
@@ -232,12 +279,12 @@ html {
   }
   
   #copyButton {
-    font-size: 2rem;
+    font-size: 2.5rem;
     margin-top: 1.5rem;
   }
   
   .gridCell {
-    padding: 5rem;
+    padding: 3.5rem;
   }
   
 }
@@ -250,16 +297,29 @@ html {
 
 @keyframes flicker {
   0% {opacity: 1;}
-/*   10% {opacity: 0;}
-  20% {opacity: 1;} */
   30% {opacity: 0;}
-/*   40% {opacity: 1;}
-  50% {opacity: 0;} */
   60% {opacity: 1;}
-/*   70% {opacity: 0;}
-  80% {opacity: 1;} */
   90% {opacity: 0;}
   100% {opacity: 1;}
 }
 
+@keyframes flicker2 {
+  0% {opacity: 1;}
+  30% {opacity: 0;}
+  60% {opacity: 1;}
+  90% {opacity: 0;}
+  100% {opacity: 1;}
+}
 
+@keyframes flash {
+  0% {background: transparent; color: #FFF; }
+  30% {opacity:1;}
+  40% {opacity:0;}
+  50% {background: #FFF; color: #222; opacity:1;}
+  60% {opacity:0;}
+  70% {background: #FFF; color: #222; opacity:1;}
+  80% {opacity:0;}
+  90% {opacity:1;}
+  95% {opacity:0;}
+  100% {background: transparent; color: #FFF; opacity:1;}
+}
