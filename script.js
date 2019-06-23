@@ -4,6 +4,7 @@
 
   /* globals google */
   /* globals snazzyMapStyle */
+  /* globals ClipboardJS */
   
   // Move these to .env files before production
   const ipAddressApiUrl = 'https://bmh54xvwva.execute-api.us-east-1.amazonaws.com/dev/getIpInfo';
@@ -19,9 +20,18 @@
   const plusFlickerAnimationDuration = 400;
   const initialPlusRevealDelay = 1000;
   
-  const mapRevealAnimationWaitingTime = 3000;
+  const mapRevealAnimationDelay = 3500;
+  const aboutUsRevealDelay = 500;
+  const copyButtonRevealDelay = 0;
   
-  const gridCell = [];
+  
+  const flashDuration = 500;
+  
+  const gridCellCount = 200;
+  const gridCells = [];
+  const plusSymbolsInGrid = [];
+  let referchCopyButtonTimeout = null;
+  
 
   /** GLOBAL VARIABLES - ENDS */
 
@@ -32,20 +42,22 @@
   
   function eleID (id) { return document.getElementById(id) }
   
-  const httpGetAsync = (theUrl, callback) => {
-    console.log(theUrl);
+  const httpGetAsync = (apiURL, callback) => {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() { 
-        console.log(xmlHttp);
+        // console.log(xmlHttp);
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
           if(xmlHttp.response)
             callback({response: JSON.parse(xmlHttp.responseText), status: 'success'});
           else
             callback({status: 'error'});
         }
+      else if(xmlHttp.readyState == 4 && (xmlHttp.status == 0 || xmlHttp.status == 404)){
+         callback({status: 'error'});
+      }
             
     }
-    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+    xmlHttp.open("GET", apiURL, true);
     xmlHttp.send(null);
   }
 
@@ -72,8 +84,9 @@
   // Render Google map on given DOM element
   const initializeMap = (mapDomElementID, Latitude, Longitude, city, country) => {
   // For more options see: https://developers.google.com/maps/documentation/javascript/reference#MapOptions
+    const defaultZoomLevel = 14, indiaMapZoomLevel = 12;
     const mapOptions = {
-      zoom: 14,
+      zoom: country == "India" ? indiaMapZoomLevel : defaultZoomLevel,
       center: new google.maps.LatLng(Latitude, Longitude),
       styles: snazzyMapStyle,
       disableDefaultUI: true,
@@ -90,94 +103,145 @@
     });
   }
   
-  const displayAboutUs = () => {
-    flicker(eleID("AboutUs"), 350, mapRevealAnimationWaitingTime + 800);
+  const displayPlusymbols = () => {
+    for(let i=0;i<gridCellCount;i++)
+    {
+      plusSymbolsInGrid[i].style.animation = "flicker";
+      plusSymbolsInGrid[i].style.animationDuration = plusFlickerAnimationDuration+"ms";
+      plusSymbolsInGrid[i].style.animationDelay = initialPlusRevealDelay + random(0,plusAnimationRandomness)+"ms";
+      plusSymbolsInGrid[i].style.animationFillMode = "forwards";
+    }
   }
   
+  
+  const displayAboutUs = () => {
+    flicker(eleID("AboutUs"), 350, mapRevealAnimationDelay + aboutUsRevealDelay);
+  }
+  
+  // Display IP address AND copy button
   const displayIP = (ipAddress) => {
+    eleID("ipAddressContainer").style.animationIterationCount = "1";
+    eleID("ipAddressContainer").style.animationName = "none"; // Fkin iOS
     eleID("caption").innerHTML = "YOUR IP ADDRESS";
     eleID("ipAddress").innerHTML = ipAddress;
     
-    flicker(eleID("caption"));
-    flicker(eleID("ipAddress"));
-    setTimeout(()=>{flicker(eleID("copyButton"))}, 1000);
+    flicker(eleID("caption"), 350, 0);
+    flicker(eleID("ipAddress"),350, 0);
+    setTimeout(()=>{flicker(eleID("copyButton", 350, 0))}, copyButtonRevealDelay);
   }
   
+  // Display Location after rendering map
   const displayLocation = (city, country) => {
-    if(city && country && city.length + country.length <20)
+    if(city && country && country === city && country.length <40)
+    {
+      eleID("locationContainer").innerHTML = country;
+      flicker(eleID("locationContainer"),350, mapRevealAnimationDelay);
+    }
+    else if(city && country && city.length + country.length <40)
     {
       eleID("locationContainer").innerHTML = city+ " // "+ country;
-      flicker(eleID("locationContainer"),350, mapRevealAnimationWaitingTime);
+      flicker(eleID("locationContainer"),350, mapRevealAnimationDelay);
+    }
+    else if(!city && country && country.length <40)
+    {
+      eleID("locationContainer").innerHTML = country;
+      flicker(eleID("locationContainer"),350, mapRevealAnimationDelay);
+    }
+    else if(city && !country && city.length <40)
+    {
+      eleID("locationContainer").innerHTML = country;
+      flicker(eleID("locationContainer"),350, mapRevealAnimationDelay);
     }
     displayAboutUs();
   }
 
-  // Display IP address and map location
+  // Display IP address and Render map location
   const renderAPIresult = (ApiResponse) => {
-    console.log("API response:");
-    console.log(ApiResponse);
-    if(ApiResponse.response && ApiResponse.status === 'success') // API response is 200
+    // API response is 200
+    if(ApiResponse.response && ApiResponse.status === 'success') //&& ApiResponse.geobytesipaddress) 
     {
       const response = ApiResponse.response;
-      console.log(response);
+      //console.log(response);
       const {
-        geobytesipaddress,
-        geobytescountry,
-        geobytescity,
-        geobyteslatitude,
-        geobyteslongitude
+        ip,
+        country,
+        city,
+        lat,
+        long
       } = response;
+      
       // show IP
-      displayIP(geobytesipaddress);
+      displayIP(ip);
+      
       // Render Google map's location based on the API response 
       initializeMap(
         "map",
-        parseFloat(geobyteslatitude),
-        parseFloat(geobyteslongitude),
-        geobytescity,
-        geobytescountry
+        parseFloat(lat),
+        parseFloat(long),
+        city,
+        country
       );
     }
+    // UI error handler
     else{
+      displayPlusymbols();
       eleID("caption").className = "captionError";
-      eleID("caption").innerHTML = "ERROR";
-      eleID("ipAddressOverlayContainer").style.backgroundColor= "rgba(46, 0, 0, 0.49)";
+      eleID("caption").innerHTML = "ERRRRRRROR";
+      eleID("ipAddressContainer").style.animationDuration = "50ms";
     }
     
   }
   
   const drawGrid = (gridContainerDomID) => {
     const container = eleID(gridContainerDomID);
-    for(let i=0;i<150;i++)
+    for(let i=0;i<gridCellCount;i++)
     {
       const cell = document.createElement('div');
       cell.className += "gridCell";
       const plus = document.createElement('span');
       plus.innerHTML = "+";
       plus.className = "plusSymbol";
-      plus.style.animation = "flicker";
-      plus.style.animationDuration = plusFlickerAnimationDuration+"ms";
-      plus.style.animationDelay = initialPlusRevealDelay + random(0,plusAnimationRandomness)+"ms";
-      plus.style.animationFillMode = "forwards";
+      plusSymbolsInGrid.push(plus);
       cell.appendChild(plus);
       container.appendChild(cell);
-      gridCell.push(cell);
+      gridCells.push(cell);
     }
   }
   
   const revealMap = (city, country) => {
-    let delay = 0.5;
-    for(let i=0;i<150;i++)
+    if(country !== "South Korea") //  Snazzy map doensn't work for South Korea
     {
-      gridCell[i].style.animation = "black2Transparent";
-      gridCell[i].style.animationDuration = "100ms";
-      gridCell[i].style.animationFillMode = "forwards";
-      gridCell[i].style.animationDelay = (initialMapRevealDelay + random(0,dominoAnimationRandomness) + (domionesFallRate * delay)) + "ms";
-      delay += gridDominoesAnimDelay;
+      displayPlusymbols();
+      let delay = 0.5;
+      for(let i=0;i<gridCellCount;i++)
+      {
+        gridCells[i].style.animation = "black2Transparent";
+        gridCells[i].style.animationDuration = "100ms";
+        gridCells[i].style.animationFillMode = "forwards";
+        gridCells[i].style.animationDelay = (initialMapRevealDelay + random(0,dominoAnimationRandomness) + (domionesFallRate * delay)) + "ms";
+        delay += gridDominoesAnimDelay;
+      }
     }
     // showLocation
     displayLocation(city, country);
       
+  }
+  
+  const flashIpAddress = () => {
+    if(referchCopyButtonTimeout){
+      clearTimeout(referchCopyButtonTimeout);
+    }
+    eleID("ipAddress").style.animation = "flash";
+    eleID("ipAddress").style.animationDuration = flashDuration+ "ms";
+    eleID("ipAddress").style.animationFillMode = "forwards";
+    setTimeout(() => { eleID("ipAddress").style.animation = "none"; }, 450);
+    referchCopyButtonTimeout = setTimeout(refreshCopyButton, 6000);
+  }
+  
+  const refreshCopyButton = () => {
+    eleID("copyButton").innerHTML = "COPY";
+    eleID("copyButton").style.backgroundColor = "transparent";
+    eleID("copyButton").style.color = "#FFF";
   }
 
   
@@ -189,14 +253,31 @@
     httpGetAsync(ipAddressApiUrl, renderAPIresult);
     // 3. Draw grid
     drawGrid("gridOverlayContainer");
-    
   }
   
   
   /** EVENT LISTENERS - STARTS */
 
-  window.onload = triggerOnLoad();
+  window.onload = triggerOnLoad;
   window.onresize = function(){ location.reload(); }
+  
+  eleID("copyButton").onclick = flashIpAddress;
+  
+  const clipboard = new ClipboardJS('#copyButton');
+  clipboard.on('success', function(e) {
+    // console.info('Action:', e.action);
+    // console.info('Text:', e.text);
+    // console.info('Trigger:', e.trigger);
+    eleID("copyButton").innerHTML = "COPIED";
+    eleID("copyButton").style.backgroundColor = "white";
+    eleID("copyButton").style.color = "#333333"
+    e.clearSelection();
+  });
+
+  clipboard.on('error', function(e) {
+    // console.error('Action:', e.action);
+    // console.error('Trigger:', e.trigger);
+  });
   
   /** EVENT LISTENERS - ENDS */
   

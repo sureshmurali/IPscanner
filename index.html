@@ -4,9 +4,15 @@
     <title>IP staging env</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#333333">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#333333">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="#333333">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDU8bDnzS0dg75w8H6Y6j_y7ssaoEJDvLA"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
     <!-- import the webpage's stylesheet -->
     <link rel="stylesheet" href="/style.css">
     
@@ -23,14 +29,18 @@
         <div id="ipAddressContainer">
           <span id="caption"> SCANNING </span>
           <span id="ipAddress"></span>
-          <button id="copyButton">COPY</button>
+          <button id="copyButton" data-clipboard-target="#ipAddress">COPY</button>
         </div>
       </header>
       
       <footer id="footerOverlayContainer">
         <div id="footerContainer">
           <span id="locationContainer"></span>
-          <span id="AboutUs">BUILT BY LD & SURESH</span>
+          <span id="AboutUs">BUILT BY 
+            <a class="contactLink LD" href="https://lakshmantgld.github.io" target="_blank">LD</a>
+            & 
+            <a class="contactLink Suresh" href="https://sureshmurali.github.io" target="_blank">SURESH</a>
+          </span>
         </div>
       </footer>
       
