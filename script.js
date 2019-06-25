@@ -97,6 +97,7 @@
       clickableIcons: false,
     };
     const map = new google.maps.Map(eleID(mapDomElementID), mapOptions);
+    eleID(mapDomElementID).removeAttribute('tabindex');
     google.maps.event.addListenerOnce(map, 'tilesloaded', function(){
       //console.log('Map loaded, now reveal map');
       revealMap(city, country);
