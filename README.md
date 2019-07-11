@@ -1,4 +1,4 @@
-Eyep.dev - Coolest way to get your IP address
+# Eyep.dev - Coolest way to get your IP address
 
 Staging link: https://eyep.glitch.me
 Production link: https://eyep.dev
