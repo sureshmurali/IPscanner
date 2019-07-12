@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Eyep - Find your IP address</title>
+    <title>IP staging env</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="Description" CONTENT="EyeP - Coolest way to get your IP address. Built by LD and Suresh.">
     <!-- Chrome, Firefox OS and Opera -->
     <meta name="theme-color" content="#333333">
     <!-- Windows Phone -->
@@ -35,7 +34,7 @@
   <body>
     <section id="fullScreenContainer">
       
-      <div id="map"></div>
+      <div id="map" tabindex="-1"></div>
       <div id="gridOverlayContainer"></div>
       <header id="ipAddressOverlayContainer">
         <div id="ipAddressContainer">
@@ -45,10 +44,17 @@
         </div>
       </header>
       
+      <div id="productHuntBadgeContainer">
+        <a href="https://www.producthunt.com/posts/eyep">
+          <img id="productHuntBadge" src="/productHuntBadge.svg" />
+        </a>
+      </div>
+      
       <footer id="footerOverlayContainer">
         <div id="footerContainer">
           <span id="locationContainer"></span>
-          <span id="AboutUs">BUILT BY 
+          <span id="AboutUs">
+              BUILT BY 
             <a class="contactLink LD" href="https://lakshmantgld.github.io" target="_blank">LD</a>
             & 
             <a class="contactLink Suresh" href="https://sureshmurali.github.io" target="_blank">SURESH</a>
