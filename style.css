@@ -25,15 +25,7 @@ a {
 
 @font-face {
   font-family: 'BenderBold';
-  src: url('https://cdn.glitch.com/cb9c4712-cbdd-45df-acee-ef88436f4bd4%2FJovanny%20Lemonad%20-%20Bender-Bold.otf?v=1560764509460'); /* IE9 Compat Modes */
-}
-@font-face {
-  font-family: 'Bender';
-  src: url('https://cdn.glitch.com/cb9c4712-cbdd-45df-acee-ef88436f4bd4%2FJovanny%20Lemonad%20-%20Bender.otf?v=1560764511597'); /* IE9 Compat Modes */
-}
-@font-face {
-  font-family: 'BenderLight';
-  src: url('https://cdn.glitch.com/cb9c4712-cbdd-45df-acee-ef88436f4bd4%2FJovanny%20Lemonad%20-%20Bender-Light.otf?v=1560764510757'); /* IE9 Compat Modes */
+  src: url('/Bender-Bold.otf'); /* IE9 Compat Modes */
 }
 /* Default style - ENDS */
 
@@ -138,6 +130,23 @@ a {
   outline: 3px solid #FFF;
   outline-offset: 4px;
 } */
+
+#productHuntBadgeContainer {
+  position: absolute;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  z-index: 2;
+  margin-top: 0.75vh;
+  width: 100%;
+}
+
+#productHuntBadge {
+  opacity: 0;
+  cursor: pointer;
+}
 
 #footerOverlayContainer {
   position: absolute;
