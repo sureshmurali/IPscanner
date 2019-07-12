@@ -22,6 +22,7 @@
   
   const mapRevealAnimationDelay = 3500;
   const aboutUsRevealDelay = 500;
+  const badgeRevealDelay = 800;
   const copyButtonRevealDelay = 0;
   
   
@@ -119,6 +120,10 @@
     flicker(eleID("AboutUs"), 350, mapRevealAnimationDelay + aboutUsRevealDelay);
   }
   
+  const displayPHBadge = () => {
+    flicker(eleID("productHuntBadge"), 350, mapRevealAnimationDelay + aboutUsRevealDelay + badgeRevealDelay);
+  }
+  
   // Display IP address AND copy button
   const displayIP = (ipAddress) => {
     eleID("ipAddressContainer").style.animationIterationCount = "1";
@@ -154,6 +159,7 @@
       flicker(eleID("locationContainer"),350, mapRevealAnimationDelay);
     }
     displayAboutUs();
+    displayPHBadge();
   }
 
   // Display IP address and Render map location
