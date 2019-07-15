@@ -21,8 +21,8 @@
   const initialPlusRevealDelay = 1000;
   
   const mapRevealAnimationDelay = 3500;
-  const aboutUsRevealDelay = 500;
-  const badgeRevealDelay = 800;
+  const aboutUsRevealDelay = 0;
+  const badgeRevealDelay = 0;
   const copyButtonRevealDelay = 0;
   
   
@@ -155,7 +155,7 @@
     }
     else if(city && !country && city.length <40)
     {
-      eleID("locationContainer").innerHTML = country;
+      eleID("locationContainer").innerHTML = city;
       flicker(eleID("locationContainer"),350, mapRevealAnimationDelay);
     }
     displayAboutUs();
