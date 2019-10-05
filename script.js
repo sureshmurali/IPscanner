@@ -31,7 +31,7 @@
   const gridCellCount = 200;
   const gridCells = [];
   const plusSymbolsInGrid = [];
-  let referchCopyButtonTimeout = null;
+  let refreshCopyButtonTimeout = null;
   
 
   /** GLOBAL VARIABLES - ENDS */
@@ -235,14 +235,14 @@
   }
   
   const flashIpAddress = () => {
-    if(referchCopyButtonTimeout){
-      clearTimeout(referchCopyButtonTimeout);
+    if(refreshCopyButtonTimeout){
+      clearTimeout(refreshCopyButtonTimeout);
     }
     eleID("ipAddress").style.animation = "flash";
     eleID("ipAddress").style.animationDuration = flashDuration+ "ms";
     eleID("ipAddress").style.animationFillMode = "forwards";
     setTimeout(() => { eleID("ipAddress").style.animation = "none"; }, 450);
-    referchCopyButtonTimeout = setTimeout(refreshCopyButton, 6000);
+    refreshCopyButtonTimeout = setTimeout(refreshCopyButton, 6000);
   }
   
   const refreshCopyButton = () => {
